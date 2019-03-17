@@ -1,0 +1,24 @@
+<mat-toolbar class="mat-elevation-z6 navbar" color="primary">
+  <div fxHide.gt-sm fxLayoutAlign="start center">
+    <button class="menu-button" mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-icon>search</mat-icon>
+    <span class="title">Stock Watch</span>
+  </div>
+  <div fxHide.lt-md>
+    <a class="brand"><i class="material-icons">watch_later</i> Swift Match</a>
+    <button mat-button routerLink="/home" routerLinkActive="active">
+      <mat-icon>home</mat-icon>
+      <span translate>Home</span>
+    </button>
+    <button mat-button routerLink="/search" routerLinkActive="active">
+      <mat-icon>settings</mat-icon>
+      <span translate>Rules</span>
+    </button>
+    <button mat-button (click)="navigateDeveloperPage()">
+      <mat-icon>info</mat-icon>
+      <span translate>About Developer</span>
+    </button>
+  </div>
+</mat-toolbar>

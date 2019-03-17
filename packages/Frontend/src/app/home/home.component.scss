@@ -1,0 +1,60 @@
+.container {
+  text-align: center;
+  padding: 1em;
+}
+
+.logo {
+  width: 150px;
+  margin: 0 auto;
+}
+
+q {
+  font-style: italic;
+  quotes: "« " " »";
+}
+
+.stock-tile{
+  width:300px;
+  cursor: pointer;
+}
+
+.search-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.spacer{
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+table{
+  width: 100%;
+}
+
+.no_data_in_table{
+  font-family: sans-serif;
+  font-style: italic;
+  height: 50px;
+  text-align: center;
+  padding-top: 20px;
+  background: white;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.fill-window{
+  max-height: 100px;
+}
+
+tr{
+  cursor: pointer;
+}

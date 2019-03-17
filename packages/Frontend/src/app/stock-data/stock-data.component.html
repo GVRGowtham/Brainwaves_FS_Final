@@ -1,0 +1,119 @@
+<div mat-dialog-title class="mat-typography" style="width:70vw">
+  <h1>Swift Data - {{data.self_data["20"]}}
+      <i class="material-icons" (click)="onNoClick()" style="float:right">clear</i></h1>
+</div>
+<div mat-dialog-content>
+  <div class="example-container">
+    <h3>Matches</h3>
+    <div class="fill-window" *ngIf="(data.self_data.match_status==2 && data.client_mismatch.length>1)">
+        <mat-form-field style="float:left;">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+        <br>
+        <table mat-table [dataSource]="matchTable" matSort class="mat-elevation-z8" style="width:100%">
+
+          <ng-container matColumnDef="col_client_20">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Client 20 </th>
+            <td mat-cell *matCellDef="let element"> {{element['20']}} </td>
+          </ng-container>
+    
+          <ng-container matColumnDef="party_a">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Party A </th>
+            <td mat-cell *matCellDef="let element"> {{element['82A']}} </td>
+          </ng-container>
+    
+          <ng-container matColumnDef="party_b">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Party B </th>
+            <td mat-cell *matCellDef="let element"> {{element['87A']}} </td>
+          </ng-container>
+    
+          <ng-container matColumnDef="contract_date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract Date </th>
+            <td mat-cell *matCellDef="let element"> {{element['30T']}} </td>
+          </ng-container>
+    
+          <ng-container matColumnDef="match_status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Match Status </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.match_status==1?'Matched':(element.match_status==2?'Mismatched':'Unmatched')}} </td>
+          </ng-container>
+    
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="text-align:left" (click)="selectRow(row)"></tr>
+        </table>
+        <div *ngIf="matchTable.data.length==0" class="no_data_in_table">No data found</div>
+    
+        <mat-paginator #paginator1 [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+        </mat-paginator>
+        <h4>Aggregate We Buy - {{aggregate_buy}}</h4>
+        <h4>Aggregate We Sell - {{aggregate_sell}}</h4>
+      </div>
+      <div class="fill-window" *ngIf="(data.self_data.match_status==2 &&data.client_mismatch.length==1)">
+          <mat-grid-list cols="4" rowHeight="20px">
+            <ng-container *ngFor="let key of keys">
+                <mat-grid-tile [ngClass]="{'match' : (data.client_mismatch[0][key]==data.self_data[key]) }">{{':'+key}}</mat-grid-tile>
+                <mat-grid-tile [ngClass]="{'match' : (data.client_mismatch[0][key]==data.self_data[key]) }">{{data.client_mismatch[0][key]}}</mat-grid-tile>
+                <mat-grid-tile [ngClass]="{'match' : (data.client_mismatch[0][key]==data.self_data[key]) }">{{data.self_data[key]}}</mat-grid-tile>
+                <mat-grid-tile [ngClass]="{'match' : (data.client_mismatch[0][key]==data.self_data[key]) }">{{data.client_mismatch[0][key]==data.self_data[key]?'Matched':'Unmatched'}}</mat-grid-tile>
+            </ng-container>
+            </mat-grid-list>
+            <button mat-raised-button style="float: right;" color="primary" *ngIf="data.self_data.match_status!=1" (click)="forceMatch()">Force Match</button>
+      </div>
+
+
+      <div class="fill-window" *ngIf="(data.self_data.match_status==1 && data.client_match.length>1)">
+          <mat-form-field style="float:left;">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+          <br>
+          <table mat-table [dataSource]="matchTable" matSort class="mat-elevation-z8" style="width:100%">
+  
+            <ng-container matColumnDef="col_client_20">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Client 20 </th>
+              <td mat-cell *matCellDef="let element"> {{element['20']}} </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="party_a">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Party A </th>
+              <td mat-cell *matCellDef="let element"> {{element['82A']}} </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="party_b">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Party B </th>
+              <td mat-cell *matCellDef="let element"> {{element['87A']}} </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="contract_date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract Date </th>
+              <td mat-cell *matCellDef="let element"> {{element['30T']}} </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="match_status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Match Status </th>
+              <td mat-cell *matCellDef="let element">
+                {{element.match_status==1?'Matched':(element.match_status==2?'Mismatched':'Unmatched')}} </td>
+            </ng-container>
+      
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="text-align:left" (click)="selectRow(row)"></tr>
+          </table>
+          <div *ngIf="matchTable.data.length==0" class="no_data_in_table">No data found</div>
+      
+          <mat-paginator #paginator1 [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+          </mat-paginator>
+          <h4>Aggregate We Buy - {{aggregate_buy}}</h4>
+          <h4>Aggregate We Sell - {{aggregate_sell}}</h4>
+        </div>
+        <div class="fill-window" *ngIf="(data.self_data.match_status==1 &&data.client_match.length==1)">
+            <mat-grid-list cols="4" rowHeight="20px">
+              <ng-container *ngFor="let key of keys">
+                  <mat-grid-tile [ngClass]="{'match' : (data.client_mismatch[0][key]==data.self_data[key]) }">{{':'+key}}</mat-grid-tile>
+                  <mat-grid-tile [ngClass]="{'match' : (data.client_mismatch[0][key]==data.self_data[key]) }">{{data.client_mismatch[0][key]}}</mat-grid-tile>
+                  <mat-grid-tile [ngClass]="{'match' : (data.client_mismatch[0][key]==data.self_data[key]) }">{{data.self_data[key]}}</mat-grid-tile>
+                  <mat-grid-tile [ngClass]="{'match' : (data.client_mismatch[0][key]==data.self_data[key]) }">{{data.client_mismatch[0][key]==data.self_data[key]?'Matched':'Unmatched'}}</mat-grid-tile>
+              </ng-container>
+              </mat-grid-list>
+              <button mat-raised-button style="float: right;" color="primary" *ngIf="data.self_data.match_status!=1" (click)="forceMatch()">Force Match</button>
+        </div>
+  </div>
+</div>

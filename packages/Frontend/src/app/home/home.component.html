@@ -1,0 +1,106 @@
+<div class="container">
+  <div style="height: 400px !important; width: 50% !important;margin-left: 25%;">
+    <canvas id="canvas">{{ chart }}</canvas>
+  </div>
+  <div style="margin-top:50px;">
+    <form [formGroup]="searchForm">
+      <mat-form-field class="div_width_25 margin_sides_10px">
+        <input matInput placeholder="Enter search text" formControlName="searchText">
+      </mat-form-field>
+      <mat-form-field style="font-size: 14px;" class="div_width_25 margin_sides_10px newStyle">
+        <mat-select placeholder="Select Category" formControlName="searchCategories"
+          (selectionChange)="updateCategory()">
+          <mat-option style="height: 40px;" *ngFor="let category of this.categories" [value]="category">
+            {{category}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field style="font-size: 14px;" class="div_width_25 margin_sides_10px newStyle">
+        <mat-select placeholder="Select Category" formControlName="searchSubCategories">
+          <mat-option style="height: 40px;"
+            *ngFor="let category of this.sub_categories[searchForm.get('searchCategories').value]" [value]="category">
+            {{category}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field style="font-size: 14px;" class="div_width_25 margin_sides_10px newStyle"
+        *ngIf="this.searchForm.get('searchSubCategories').value == 'Status'">
+        <mat-select placeholder="Select Value" formControlName="searchDropdown">
+          <mat-option style="height: 40px;" [value]="1"> Matched </mat-option>
+          <mat-option style="height: 40px;" [value]="2"> Mismatched </mat-option>
+          <mat-option style="height: 40px;" [value]="3"> Unmatched </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="this.searchForm.get('searchCategories').value == 'Date'">
+          <input matInput [matDatepicker]="myDatepicker" formControlName="searchDate">
+          <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+          <mat-datepicker #myDatepicker></mat-datepicker>
+        </mat-form-field>
+      <button mat-raised-button color="primary" (click)="search()">
+        <mat-icon>search</mat-icon>Search
+      </button>
+    </form>
+  </div>
+  <div class="fill-window">
+    <mat-form-field style="float:left;">
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    <table mat-table [dataSource]="oneToOneMatchTable" matSort class="mat-elevation-z8">
+
+      <ng-container matColumnDef="col_socgen_20">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Socgen 20</th>
+        <td mat-cell *matCellDef="let element"> {{element['20']}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="col_client_20">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Client 20 </th>
+        <td mat-cell *matCellDef="let element"> {{element['match_20']}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="party_a">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Party A </th>
+        <td mat-cell *matCellDef="let element"> {{element['82A']}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="party_b">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Party B </th>
+        <td mat-cell *matCellDef="let element"> {{element['87A']}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="contract_date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract Date </th>
+        <td mat-cell *matCellDef="let element"> {{element['formatted_30T']}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="match_status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Match Status </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.match_status==1?'Matched':(element.match_status==2?'Mismatched':'Unmatched')}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="relationship">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Mapping relationship </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.match_status==1?(
+            clientMatch[element.id]?(clientMatch[element.id].length==1?'One-to-one':(clientMatch[element.id].length>1?'One-to-many':'None')):'None'
+          ):(
+            element.match_status==2?(
+              clientMisMatch[element.id]?(clientMisMatch[element.id].length==1?'One-to-one':(clientMisMatch[element.id].length>1?'One-to-many':'None')):'None'
+            ):(
+              'None'
+            )
+          )}}
+          <!-- {{clientMatch[element.id]?(clientMatch[element.id].length==1?'One-to-one':(clientMatch[element.id].length>1?'One-to-many':'None')):'None'}} -->
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="text-align:left" (click)="selectRow(row)">
+      </tr>
+    </table>
+    <div *ngIf="oneToOneMatchTable.data.length==0" class="no_data_in_table">No data found</div>
+
+    <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+    </mat-paginator>
+  </div>
+</div>
